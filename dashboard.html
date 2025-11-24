@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PagoFácil Digital</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-page">
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <span>PagoFácil Digital</span>
+            </div>
+            <div class="header-actions">
+                <span class="user-greeting">Hola, <span id="userName">andres bateca</span></span>
+                <a href="support.html" class="btn btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Soporte
+                </a>
+                <button class="btn btn-icon" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="container">
+            <div class="balance-cards">
+                <div class="balance-card balance-card-primary">
+                    <div class="balance-header">
+                        <span>Saldo Disponible</span>
+                        <div class="icon-wallet">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="balance-amount" id="availableBalance">$ 1.000,00</div>
+                    <div class="balance-status">Listo para usar</div>
+                </div>
+
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <span>Total Enviado</span>
+                        <div class="icon-sent">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="balance-amount" id="totalSent">$ 150,00</div>
+                    <div class="balance-status">Este mes</div>
+                </div>
+
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <span>Total Recibido</span>
+                        <div class="icon-received">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                                <polyline points="17 6 23 6 23 12"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="balance-amount" id="totalReceived">$ 500,00</div>
+                    <div class="balance-status">Este mes</div>
+                </div>
+            </div>
+
+            <section class="quick-actions">
+                <h2 class="section-title">Acciones Rápidas</h2>
+                <div class="actions-grid">
+                    <a href="send-payment.html" class="action-card action-card-primary">
+                        <div class="action-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </div>
+                        <span>Enviar Pago</span>
+                    </a>
+                    <a href="add-funds.html" class="action-card">
+                        <div class="action-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                        </div>
+                        <span>Agregar Fondos</span>
+                    </a>
+                    <a href="settings.html" class="action-card">
+                        <div class="action-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+                            </svg>
+                        </div>
+                        <span>Configuración</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="transactions">
+                <h2 class="section-title">Historial de Transacciones</h2>
+                <div class="transactions-list" id="transactionsList">
+                    <!-- Las transacciones se cargarán dinámicamente -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+

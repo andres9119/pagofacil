@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PagoFácil Digital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="logo">PagoFácil<span>Digital</span></div>
+        <nav class="nav" id="main-nav">
+            <button class="nav-item" data-view="landing">Inicio</button>
+            <button class="nav-item nav-item--private" data-view="dashboard">Dashboard</button>
+            <button class="nav-item nav-item--private" data-view="pay">Pagar</button>
+            <button class="nav-item nav-item--private" data-view="add-funds">Agregar Fondos</button>
+            <button class="nav-item nav-item--private" data-view="support">Soporte</button>
+            <button class="nav-item nav-item--admin" data-view="admin">Admin</button>
+        </nav>
+        <div class="topbar__actions">
+            <button class="btn btn--ghost" data-view="login" id="login-btn">Iniciar Sesión</button>
+            <button class="btn btn--primary" data-view="register" id="register-btn">Registrarse</button>
+            <div class="user-pill" id="user-pill">
+                <span id="user-pill-name">Hola</span>
+                <button class="btn btn--ghost btn--xs" id="logout-btn">Salir</button>
+            </div>
+        </div>
+        <button class="menu-toggle" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <main>
+        <section class="view view--active" id="view-landing">
+            <section class="hero">
+                <div class="hero__content">
+                    <p class="eyebrow">Billetera digital inteligente</p>
+                    <h1>Pagos digitales fáciles y seguros.</h1>
+                    <p class="lead">Envía y recibe dinero, paga servicios y gestiona tus tarjetas con la seguridad de PagoFácil Digital.</p>
+                    <div class="hero__actions">
+                        <button class="btn btn--primary" data-view="register">Comenzar Gratis</button>
+                        <button class="btn btn--ghost" data-view="login">Iniciar Sesión</button>
+                    </div>
+                    <div class="hero__summary">
+                        <div>
+                            <span class="hero__summary-value">$8,450</span>
+                            <span>Saldo total</span>
+                        </div>
+                        <div>
+                            <span class="hero__summary-value">+24</span>
+                            <span>Transacciones hoy</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero__mockup">
+                    <div class="card digital-card">
+                        <div class="card__chip"></div>
+                        <div class="card__number">4398 • 2023 • • 9981</div>
+                        <div class="card__holder">
+                            <span>Titular</span>
+                            <strong>Andrea López</strong>
+                        </div>
+                        <div class="card__meta">
+                            <div>
+                                <span>Vence</span>
+                                <strong>08/28</strong>
+                            </div>
+                            <div>
+                                <span>CVC</span>
+                                <strong>726</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget transactions">
+                        <h3>Actividad reciente</h3>
+                        <ul id="landing-transactions">
+                            <!-- Donde se muestra un resumen estático -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section features">
+                <div class="section__header">
+                    <p class="eyebrow">¿Por qué elegir PagoFácil Digital?</p>
+                    <h2>Tu dinero, siempre bajo control.</h2>
+                </div>
+                <div class="grid grid--4">
+                    <article class="feature-card">
+                        <h3>Pagos instantáneos</h3>
+                        <p>Transferencias inmediatas 24/7.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3>Máxima seguridad</h3>
+                        <p>Cifrado de nivel bancario.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3>Múltiples métodos</h3>
+                        <p>Tarjetas, transferencias y billeteras.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3>Fácil de usar</h3>
+                        <p>Interfaz pensada para todos.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section cta">
+                <div>
+                    <h2>Únete a la revolución de pagos digitales.</h2>
+                    <p>Regístrate gratis y recibe tu tarjeta digital en menos de 5 minutos.</p>
+                </div>
+                <button class="btn btn--primary btn--lg" data-view="register">Crear cuenta</button>
+            </section>
+        </section>
+
+        <section class="view" id="view-register">
+            <article class="auth-card">
+                <button class="link-back" data-view="landing">← Volver</button>
+                <div class="auth-card__header">
+                    <div class="app-icon"></div>
+                    <h2>Crear Cuenta</h2>
+                    <p>Completa tus datos para comenzar.</p>
+                </div>
+                <form id="register-form" class="form-grid">
+                    <label>Nombre Completo
+                        <input type="text" name="name" placeholder="Juan Pérez" required>
+                    </label>
+                    <label>Correo Electrónico
+                        <input type="email" name="email" placeholder="tu@email.com" required>
+                    </label>
+                    <label>Teléfono
+                        <input type="tel" name="phone" placeholder="+54 9 11 1234-5678" required>
+                    </label>
+                    <label>Método de Pago Preferido
+                        <select name="method" required>
+                            <option value="">Selecciona un método</option>
+                            <option>Tarjeta de Crédito</option>
+                            <option>Tarjeta de Débito</option>
+                            <option>Transferencia Bancaria</option>
+                            <option>Billetera Digital</option>
+                        </select>
+                    </label>
+                    <label>Contraseña
+                        <input type="password" name="password" required>
+                    </label>
+                    <label>Confirmar Contraseña
+                        <input type="password" name="confirmPassword" required>
+                    </label>
+                    <button class="btn btn--primary" type="submit">Crear Cuenta</button>
+                </form>
+                <p class="auth-card__footer">¿Ya tienes cuenta? <button type="button" class="link" data-view="login">Inicia sesión</button></p>
+            </article>
+        </section>
+
+        <section class="view" id="view-login">
+            <article class="auth-card">
+                <button class="link-back" data-view="landing">← Volver</button>
+                <div class="auth-card__header">
+                    <div class="app-icon"></div>
+                    <h2>Iniciar Sesión</h2>
+                    <p>Accede a tu cuenta de PagoFácil Digital.</p>
+                </div>
+                <form id="login-form" class="form-grid">
+                    <label>Correo Electrónico
+                        <input type="email" name="email" placeholder="tu@email.com" required>
+                    </label>
+                    <label>Contraseña
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="remember">
+                        <span>Recordarme</span>
+                    </label>
+                    <button class="btn btn--primary" type="submit">Iniciar Sesión</button>
+                </form>
+                <div class="auth-hint">
+                    <strong>Cuenta de prueba:</strong>
+                    <p>Email: admin@pagofacil.com<br>Contraseña: cualquiera</p>
+                </div>
+                <p class="auth-card__footer">¿No tienes cuenta? <button type="button" class="link" data-view="register">Regístrate</button></p>
+            </article>
+        </section>
+
+        <section class="view" id="view-dashboard">
+            <div class="dashboard-header">
+                <div>
+                    <p class="eyebrow">Bienvenido</p>
+                    <h2 id="dashboard-username">Admin User</h2>
+                </div>
+                <button class="btn btn--ghost" data-view="support">Soporte</button>
+            </div>
+            <div class="grid grid--3 dashboard-cards">
+                <article class="metric-card metric-card--primary">
+                    <h3>Saldo Disponible</h3>
+                    <p id="balance-available">$0</p>
+                    <small>Listo para usar</small>
+                </article>
+                <article class="metric-card">
+                    <h3>Total Enviado</h3>
+                    <p id="balance-sent">$0</p>
+                    <small>Este mes</small>
+                </article>
+                <article class="metric-card">
+                    <h3>Total Recibido</h3>
+                    <p id="balance-received">$0</p>
+                    <small>Este mes</small>
+                </article>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-card" data-view="pay">Enviar Pago</button>
+                <button class="quick-card" data-view="add-funds">Agregar Fondos</button>
+                <button class="quick-card" data-view="settings">Configuración</button>
+            </div>
+            <section class="panel">
+                <div class="panel__header">
+                    <h3>Historial de Transacciones</h3>
+                    <button class="btn btn--ghost btn--xs" id="clear-transactions-btn">Limpiar historial</button>
+                </div>
+                <ul class="transaction-list" id="dashboard-transactions"></ul>
+            </section>
+        </section>
+
+        <section class="view" id="view-pay">
+            <article class="panel form-panel">
+                <button class="link-back" data-view="dashboard">← Volver al Dashboard</button>
+                <div class="panel__header">
+                    <div>
+                        <p class="eyebrow">Tu saldo disponible</p>
+                        <h2 id="pay-current-balance">$0</h2>
+                    </div>
+                </div>
+                <form id="pay-form" class="form-grid">
+                    <label>Número de Teléfono del Destinatario *
+                        <input type="tel" name="phone" placeholder="+54 9 11 1234-5678" required>
+                    </label>
+                    <label>Monto *
+                        <input type="number" name="amount" min="1" step="0.01" required>
+                    </label>
+                    <label>Método de Pago *
+                        <select name="method" required>
+                            <option>Tarjeta de Crédito</option>
+                            <option>Tarjeta de Débito</option>
+                            <option>Transferencia Bancaria</option>
+                            <option>Billetera Digital</option>
+                        </select>
+                    </label>
+                    <label>Descripción (Opcional)
+                        <input type="text" name="description" placeholder="Ej: Pago de servicios">
+                    </label>
+                    <button class="btn btn--primary" type="submit">Enviar</button>
+                    <button class="btn btn--ghost" type="reset">Cancelar</button>
+                </form>
+                <div class="notice">Todas las transacciones están protegidas con cifrado de nivel bancario.</div>
+            </article>
+        </section>
+
+        <section class="view" id="view-add-funds">
+            <article class="panel form-panel">
+                <button class="link-back" data-view="dashboard">← Volver al Dashboard</button>
+                <div class="panel__header">
+                    <div>
+                        <p class="eyebrow">Saldo actual</p>
+                        <h2 id="funds-current-balance">$0</h2>
+                    </div>
+                </div>
+                <form id="funds-form" class="form-grid">
+                    <label>Monto a agregar
+                        <input type="number" name="amount" min="1" step="0.01" required>
+                    </label>
+                    <div class="pill-group">
+                        <button type="button" class="pill" data-amount="100">$100</button>
+                        <button type="button" class="pill" data-amount="500">$500</button>
+                        <button type="button" class="pill" data-amount="1000">$1000</button>
+                        <button type="button" class="pill" data-amount="2000">$2000</button>
+                        <button type="button" class="pill" data-amount="5000">$5000</button>
+                    </div>
+                    <label>Método de Pago
+                        <select name="method" required>
+                            <option>Tarjeta de Crédito</option>
+                            <option>Tarjeta de Débito</option>
+                            <option>Transferencia Bancaria</option>
+                            <option>Billetera Digital</option>
+                        </select>
+                    </label>
+                    <label>Número de Tarjeta
+                        <input type="text" name="card" placeholder="1234 5678 9012 3456" required>
+                    </label>
+                    <label>Nombre del Titular
+                        <input type="text" name="holder" placeholder="Como aparece en la tarjeta" required>
+                    </label>
+                    <div class="form-row">
+                        <label>Vencimiento
+                            <input type="text" name="exp" placeholder="MM/AA" required>
+                        </label>
+                        <label>CVV
+                            <input type="text" name="cvv" placeholder="123" required>
+                        </label>
+                    </div>
+                    <button class="btn btn--primary" type="submit">Agregar</button>
+                </form>
+            </article>
+        </section>
+
+        <section class="view" id="view-settings">
+            <article class="panel form-panel">
+                <button class="link-back" data-view="dashboard">← Volver al Dashboard</button>
+                <h2>Configuración</h2>
+                <form id="profile-form" class="form-grid">
+                    <h3>Información Personal</h3>
+                    <label>Nombre Completo
+                        <input type="text" name="name" required>
+                    </label>
+                    <label>Correo Electrónico
+                        <input type="email" name="email" required>
+                    </label>
+                    <label>Teléfono
+                        <input type="tel" name="phone" required>
+                    </label>
+                    <label>Método de Pago Preferido
+                        <select name="method">
+                            <option>Tarjeta de Crédito</option>
+                            <option>Tarjeta de Débito</option>
+                            <option>Transferencia Bancaria</option>
+                            <option>Billetera Digital</option>
+                        </select>
+                    </label>
+                    <button class="btn btn--primary" type="submit">Guardar cambios</button>
+                </form>
+                <form id="security-form" class="form-grid">
+                    <h3>Seguridad</h3>
+                    <label>Contraseña Actual
+                        <input type="password" name="currentPassword" required>
+                    </label>
+                    <label>Nueva Contraseña
+                        <input type="password" name="newPassword" required>
+                    </label>
+                    <label>Confirmar Nueva Contraseña
+                        <input type="password" name="confirmNewPassword" required>
+                    </label>
+                    <button class="btn btn--ghost" type="submit">Cambiar contraseña</button>
+                </form>
+            </article>
+        </section>
+
+        <section class="view" id="view-support">
+            <article class="panel">
+                <button class="link-back" data-view="dashboard">← Volver al Dashboard</button>
+                <h2>Centro de Soporte</h2>
+                <div class="grid grid--3 support-cards">
+                    <div class="feature-card">
+                        <h3>Teléfono</h3>
+                        <p>Lun - Vie: 9:00 - 18:00</p>
+                        <strong>0800-123-4567</strong>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Email</h3>
+                        <p>Respuesta en 24hs</p>
+                        <strong>soporte@pagofacil.com</strong>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Chat en vivo</h3>
+                        <p>Disponible 24/7</p>
+                        <strong>Inicia chat abajo</strong>
+                    </div>
+                </div>
+                <section class="faq">
+                    <h3>Preguntas frecuentes</h3>
+                    <details open>
+                        <summary>¿Cómo puedo realizar un pago?</summary>
+                        <p>Ingresa al dashboard y presiona "Enviar Pago". Completa el formulario y confirma.</p>
+                    </details>
+                    <details>
+                        <summary>¿Cuánto tardan las transferencias?</summary>
+                        <p>Las transferencias internas son instantáneas, a bancos entre 1 y 2 días hábiles.</p>
+                    </details>
+                    <details>
+                        <summary>¿Cómo agrego fondos?</summary>
+                        <p>En el menú elige "Agregar Fondos" y completa los datos de tu tarjeta o cuenta.</p>
+                    </details>
+                </section>
+            </article>
+        </section>
+
+        <section class="view" id="view-admin">
+            <article class="panel">
+                <button class="link-back" data-view="dashboard">← Volver al Dashboard</button>
+                <div class="panel__header">
+                    <div>
+                        <p class="eyebrow">Panel de Administración</p>
+                        <h2>Visión general</h2>
+                    </div>
+                    <span class="badge" id="admin-role-badge">Solo Admin</span>
+                </div>
+                <div class="grid grid--4 admin-metrics">
+                    <article class="metric-card">
+                        <h3>Total Usuarios</h3>
+                        <p id="admin-total-users">0</p>
+                    </article>
+                    <article class="metric-card">
+                        <h3>Transacciones</h3>
+                        <p id="admin-total-transactions">0</p>
+                    </article>
+                    <article class="metric-card">
+                        <h3>Volumen Total</h3>
+                        <p id="admin-total-volume">$0</p>
+                    </article>
+                    <article class="metric-card">
+                        <h3>Tasa de Éxito</h3>
+                        <p>98.5%</p>
+                    </article>
+                </div>
+                <section class="panel table-panel">
+                    <h3>Gestión de Usuarios</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Método Preferido</th>
+                                <th>Saldo</th>
+                                <th>Rol</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table"></tbody>
+                    </table>
+                </section>
+                <section class="panel table-panel">
+                    <h3>Transacciones Recientes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Detalle</th>
+                                <th>Método</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-transactions-table"></tbody>
+                    </table>
+                </section>
+                <p class="notice notice--warning" id="admin-warning">No tienes permisos para ver esta sección.</p>
+            </article>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© <span id="current-year"></span> PagoFácil Digital. Todos los derechos reservados.</p>
+        <div class="footer__links">
+            <a href="#">Términos</a>
+            <a href="#">Privacidad</a>
+            <a href="#">Ayuda</a>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Fondos - PagoFácil Digital</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="form-page">
+    <a href="dashboard.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Volver
+    </a>
+
+    <div class="container">
+        <div class="balance-banner">
+            <div class="balance-info">
+                <span>Saldo Actual</span>
+                <div class="balance-amount-large" id="currentBalance">$ 1.000,00</div>
+            </div>
+            <div class="icon-wallet-large">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                    <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="form-group">
+                <label for="amount">Monto a Agregar</label>
+                <div class="input-with-icon">
+                    <span class="currency-symbol">$</span>
+                    <input type="number" id="amount" name="amount" step="0.01" min="0.01" placeholder="0.00" required>
+                </div>
+            </div>
+
+            <div class="amount-buttons">
+                <button type="button" class="amount-btn" data-amount="100">$100</button>
+                <button type="button" class="amount-btn" data-amount="500">$500</button>
+                <button type="button" class="amount-btn" data-amount="1000">$1000</button>
+                <button type="button" class="amount-btn" data-amount="2000">$2000</button>
+                <button type="button" class="amount-btn" data-amount="5000">$5000</button>
+            </div>
+
+            <div class="form-group">
+                <label>Método de Pago</label>
+                <div class="payment-methods">
+                    <label class="payment-method-card active" data-method="credito">
+                        <input type="radio" name="paymentMethod" value="credito" checked>
+                        <div class="payment-method-content">
+                            <div class="payment-icon payment-icon-blue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                    <line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong>Tarjeta de Crédito</strong>
+                                <p>Acreditación instantánea</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-method-card" data-method="debito">
+                        <input type="radio" name="paymentMethod" value="debito">
+                        <div class="payment-method-content">
+                            <div class="payment-icon payment-icon-purple">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                    <line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong>Tarjeta de Débito</strong>
+                                <p>Acreditación instantánea</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-method-card" data-method="transferencia">
+                        <input type="radio" name="paymentMethod" value="transferencia">
+                        <div class="payment-method-content">
+                            <div class="payment-icon payment-icon-pink">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                    <line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong>Transferencia Bancaria</strong>
+                                <p>1-2 días hábiles</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-method-card" data-method="billetera">
+                        <input type="radio" name="paymentMethod" value="billetera">
+                        <div class="payment-method-content">
+                            <div class="payment-icon payment-icon-lightblue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong>Billetera Digital</strong>
+                                <p>Acreditación instantánea</p>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div id="cardDetails" class="card-details">
+                <h3>Datos de la Tarjeta</h3>
+                <div class="form-group">
+                    <label for="cardNumber">Número de Tarjeta</label>
+                    <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                <div class="form-group">
+                    <label for="cardName">Nombre del Titular</label>
+                    <input type="text" id="cardName" name="cardName" placeholder="Como aparece en la tarjeta">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cardExpiry">Vencimiento</label>
+                        <input type="text" id="cardExpiry" name="cardExpiry" placeholder="MM/AA" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="cardCVV">CVV</label>
+                        <input type="text" id="cardCVV" name="cardCVV" placeholder="123" maxlength="4">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="addFundsBtn" class="btn btn-primary btn-block btn-large">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Agregar
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+
