@@ -203,10 +203,11 @@ const fillProfileForm = () => {
     const user = getCurrentUser();
     if (!user) return showView('login');
     const profileForm = document.getElementById('profile-form');
-    profileForm.name.value = user.name;
-    profileForm.email.value = user.email;
-    profileForm.phone.value = user.phone;
-    profileForm.method.value = user.preferredMethod;
+    if (!profileForm) return;
+    profileForm.elements.namedItem('name').value = user.name;
+    profileForm.elements.namedItem('email').value = user.email;
+    profileForm.elements.namedItem('phone').value = user.phone;
+    profileForm.elements.namedItem('method').value = user.preferredMethod;
 };
 
 const renderAdminView = () => {
@@ -263,25 +264,27 @@ const renderAdminView = () => {
 const handleRegister = (event) => {
     event.preventDefault();
     const form = event.target;
-    const { name, email, phone, method, password, confirmPassword } = form;
-    if (password.value !== confirmPassword.value) {
+    const data = new FormData(form);
+    const email = data.get('email');
+    const password = data.get('password');
+    if (password !== data.get('confirmPassword')) {
         alert('Las contraseñas no coinciden.');
         return;
     }
-    if (state.users.some((user) => user.email === email.value)) {
+    if (state.users.some((user) => user.email === email)) {
         alert('Ya existe un usuario con ese correo.');
         return;
     }
 
     const newUser = {
         id: Date.now(),
-        name: name.value,
-        email: email.value,
-        phone: phone.value,
-        preferredMethod: method.value,
+        name: data.get('name'),
+        email,
+        phone: data.get('phone'),
+        preferredMethod: data.get('method'),
         role: 'usuario',
         balance: 0,
-        password: password.value
+        password: password || 'demo'
     };
 
     state.users.push(newUser);
@@ -295,8 +298,9 @@ const handleRegister = (event) => {
 
 const handleLogin = (event) => {
     event.preventDefault();
-    const { email, password } = event.target;
-    const user = state.users.find((u) => u.email === email.value.trim());
+    const data = new FormData(event.target);
+    const email = data.get('email')?.trim();
+    const user = state.users.find((u) => u.email === email);
     if (!user) {
         alert('Usuario no encontrado.');
         return;
@@ -319,8 +323,8 @@ const handlePayment = (event) => {
     event.preventDefault();
     const user = getCurrentUser();
     if (!user) return showView('login');
-    const { phone, amount, method, description } = event.target;
-    const value = Number(amount.value);
+    const data = new FormData(event.target);
+    const value = Number(data.get('amount'));
     if (value <= 0) {
         alert('Ingresa un monto válido.');
         return;
@@ -334,11 +338,11 @@ const handlePayment = (event) => {
     state.transactions.push({
         id: Date.now(),
         userId: user.id,
-        contact: phone.value,
-        method: method.value,
+        contact: data.get('phone'),
+        method: data.get('method'),
         amount: -value,
         status: 'Completado',
-        description: description.value || 'Pago enviado'
+        description: data.get('description') || 'Pago enviado'
     });
     saveState();
     event.target.reset();
@@ -350,8 +354,8 @@ const handleAddFunds = (event) => {
     event.preventDefault();
     const user = getCurrentUser();
     if (!user) return showView('login');
-    const { amount, method, card, holder } = event.target;
-    const value = Number(amount.value);
+    const data = new FormData(event.target);
+    const value = Number(data.get('amount'));
     if (value <= 0) {
         alert('Ingresa un monto válido.');
         return;
@@ -361,10 +365,10 @@ const handleAddFunds = (event) => {
         id: Date.now(),
         userId: user.id,
         contact: 'Recarga',
-        method: method.value,
+        method: data.get('method'),
         amount: value,
         status: 'Completado',
-        description: `Recarga con ${method.value}`
+        description: `Recarga con ${data.get('method')}`
     });
     saveState();
     event.target.reset();
@@ -376,11 +380,11 @@ const handleProfileUpdate = (event) => {
     event.preventDefault();
     const user = getCurrentUser();
     if (!user) return;
-    const { name, email, phone, method } = event.target;
-    user.name = name.value;
-    user.email = email.value;
-    user.phone = phone.value;
-    user.preferredMethod = method.value;
+    const data = new FormData(event.target);
+    user.name = data.get('name');
+    user.email = data.get('email');
+    user.phone = data.get('phone');
+    user.preferredMethod = data.get('method');
     saveState();
     updateHeaderState();
     renderDashboard();
@@ -391,12 +395,13 @@ const handleSecurityUpdate = (event) => {
     event.preventDefault();
     const user = getCurrentUser();
     if (!user) return;
-    const { newPassword, confirmNewPassword } = event.target;
-    if (newPassword.value !== confirmNewPassword.value) {
+    const data = new FormData(event.target);
+    const newPassword = data.get('newPassword');
+    if (newPassword !== data.get('confirmNewPassword')) {
         alert('Las contraseñas no coinciden.');
         return;
     }
-    user.password = newPassword.value;
+    user.password = newPassword || 'demo';
     saveState();
     event.target.reset();
     alert('Contraseña actualizada.');
@@ -406,7 +411,8 @@ const handleQuickAmount = (event) => {
     const amount = event.target.dataset.amount;
     if (!amount) return;
     const form = document.getElementById('funds-form');
-    form.amount.value = amount;
+    if (!form) return;
+    form.elements.namedItem('amount').value = amount;
 };
 
 const handleClearTransactions = () => {
@@ -451,569 +457,3 @@ const init = () => {
 };
 
 document.addEventListener('DOMContentLoaded', init);
-// Datos simulados almacenados en localStorage
-const initStorage = () => {
-    if (!localStorage.getItem('users')) {
-        localStorage.setItem('users', JSON.stringify([
-            {
-                email: 'admin@pagofacil.com',
-                password: 'cualquiera',
-                fullName: 'andres bateca',
-                phone: '3178808080',
-                paymentMethod: 'billetera',
-                balance: 1000.00,
-                transactions: [
-                    {
-                        id: 1,
-                        type: 'sent',
-                        name: 'María González',
-                        method: 'Tarjeta de Crédito',
-                        date: '9 nov 2025',
-                        amount: 150.00,
-                        status: 'Completado'
-                    },
-                    {
-                        id: 2,
-                        type: 'received',
-                        name: 'Juan Pérez',
-                        method: 'Transferencia Bancaria',
-                        date: '7 nov 2025',
-                        amount: 500.00,
-                        status: 'Completado'
-                    }
-                ]
-            }
-        ]));
-    }
-    
-    if (!localStorage.getItem('currentUser')) {
-        localStorage.setItem('currentUser', '');
-    }
-};
-
-// Inicializar almacenamiento al cargar
-initStorage();
-
-// Obtener usuario actual
-const getCurrentUser = () => {
-    const email = localStorage.getItem('currentUser');
-    if (!email) return null;
-    
-    const users = JSON.parse(localStorage.getItem('users'));
-    return users.find(u => u.email === email);
-};
-
-// Guardar usuario actual
-const setCurrentUser = (email) => {
-    localStorage.setItem('currentUser', email);
-};
-
-// Actualizar usuario
-const updateUser = (user) => {
-    const users = JSON.parse(localStorage.getItem('users'));
-    const index = users.findIndex(u => u.email === user.email);
-    if (index !== -1) {
-        users[index] = user;
-        localStorage.setItem('users', JSON.stringify(users));
-    }
-};
-
-// Login
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        const users = JSON.parse(localStorage.getItem('users'));
-        const user = users.find(u => u.email === email && u.password === password);
-        
-        if (user) {
-            setCurrentUser(email);
-            window.location.href = 'dashboard.html';
-        } else {
-            alert('Credenciales incorrectas. Usa: admin@pagofacil.com / cualquiera');
-        }
-    });
-}
-
-// Registro
-const registerForm = document.getElementById('registerForm');
-if (registerForm) {
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-        
-        if (password !== confirmPassword) {
-            alert('Las contraseñas no coinciden');
-            return;
-        }
-        
-        const newUser = {
-            email: document.getElementById('email').value,
-            password: password,
-            fullName: document.getElementById('fullName').value,
-            phone: document.getElementById('phone').value,
-            paymentMethod: document.getElementById('paymentMethod').value,
-            balance: 0.00,
-            transactions: []
-        };
-        
-        const users = JSON.parse(localStorage.getItem('users'));
-        
-        if (users.find(u => u.email === newUser.email)) {
-            alert('Este correo ya está registrado');
-            return;
-        }
-        
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        setCurrentUser(newUser.email);
-        
-        alert('Cuenta creada exitosamente');
-        window.location.href = 'dashboard.html';
-    });
-}
-
-// Dashboard - Cargar datos
-const loadDashboard = () => {
-    const user = getCurrentUser();
-    
-    if (!user) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Actualizar nombre de usuario
-    const userNameEl = document.getElementById('userName');
-    if (userNameEl) {
-        userNameEl.textContent = user.fullName;
-    }
-    
-    // Actualizar balance
-    const availableBalance = document.getElementById('availableBalance');
-    if (availableBalance) {
-        availableBalance.textContent = `$ ${user.balance.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-    
-    // Calcular totales
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    
-    const monthTransactions = user.transactions.filter(t => {
-        const transDate = new Date(t.date);
-        return transDate.getMonth() === currentMonth && transDate.getFullYear() === currentYear;
-    });
-    
-    const totalSent = monthTransactions
-        .filter(t => t.type === 'sent')
-        .reduce((sum, t) => sum + t.amount, 0);
-    
-    const totalReceived = monthTransactions
-        .filter(t => t.type === 'received')
-        .reduce((sum, t) => sum + t.amount, 0);
-    
-    const totalSentEl = document.getElementById('totalSent');
-    if (totalSentEl) {
-        totalSentEl.textContent = `$ ${totalSent.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-    
-    const totalReceivedEl = document.getElementById('totalReceived');
-    if (totalReceivedEl) {
-        totalReceivedEl.textContent = `$ ${totalReceived.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-    
-    // Cargar transacciones
-    loadTransactions();
-};
-
-// Cargar transacciones
-const loadTransactions = () => {
-    const user = getCurrentUser();
-    if (!user) return;
-    
-    const transactionsList = document.getElementById('transactionsList');
-    if (!transactionsList) return;
-    
-    transactionsList.innerHTML = '';
-    
-    if (user.transactions.length === 0) {
-        transactionsList.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-gray);">No hay transacciones aún</div>';
-        return;
-    }
-    
-    // Ordenar por fecha (más recientes primero)
-    const sortedTransactions = [...user.transactions].sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
-    });
-    
-    sortedTransactions.forEach(transaction => {
-        const transactionEl = document.createElement('div');
-        transactionEl.className = 'transaction-item';
-        
-        const iconClass = transaction.type === 'sent' ? 'sent' : 'received';
-        const iconSvg = transaction.type === 'sent' 
-            ? '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>'
-            : '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>';
-        
-        const amountClass = transaction.type === 'sent' ? 'negative' : 'positive';
-        const amountSign = transaction.type === 'sent' ? '-' : '+';
-        
-        transactionEl.innerHTML = `
-            <div class="transaction-info">
-                <div class="transaction-icon ${iconClass}">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        ${iconSvg}
-                    </svg>
-                </div>
-                <div class="transaction-details">
-                    <h4>${transaction.name}</h4>
-                    <p>${transaction.method} • ${transaction.date}</p>
-                </div>
-            </div>
-            <div class="transaction-amount">
-                <div class="amount ${amountClass}">${amountSign}$ ${transaction.amount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <span class="transaction-status">${transaction.status}</span>
-            </div>
-        `;
-        
-        transactionsList.appendChild(transactionEl);
-    });
-};
-
-// Logout
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-            localStorage.setItem('currentUser', '');
-            window.location.href = 'index.html';
-        }
-    });
-}
-
-// Realizar Pago
-const paymentForm = document.getElementById('paymentForm');
-if (paymentForm) {
-    const user = getCurrentUser();
-    if (!user) {
-        window.location.href = 'login.html';
-    } else {
-        const availableBalance = document.getElementById('availableBalance');
-        if (availableBalance) {
-            availableBalance.textContent = `$ ${user.balance.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        }
-    }
-    
-    paymentForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const user = getCurrentUser();
-        if (!user) {
-            window.location.href = 'login.html';
-            return;
-        }
-        
-        const amount = parseFloat(document.getElementById('amount').value);
-        const phoneNumber = document.getElementById('phoneNumber').value;
-        const paymentMethod = document.getElementById('paymentMethod').value;
-        const description = document.getElementById('description').value || 'Sin descripción';
-        
-        if (amount <= 0) {
-            alert('El monto debe ser mayor a 0');
-            return;
-        }
-        
-        if (amount > user.balance) {
-            alert('No tienes saldo suficiente');
-            return;
-        }
-        
-        if (confirm(`¿Confirmas el pago de $${amount.toLocaleString('es-AR', { minimumFractionDigits: 2 })} a ${phoneNumber}?`)) {
-            // Actualizar balance
-            user.balance -= amount;
-            
-            // Agregar transacción
-            const newTransaction = {
-                id: Date.now(),
-                type: 'sent',
-                name: phoneNumber,
-                method: document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text,
-                date: new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }),
-                amount: amount,
-                status: 'Completado',
-                description: description
-            };
-            
-            user.transactions.push(newTransaction);
-            updateUser(user);
-            
-            alert('Pago realizado exitosamente');
-            window.location.href = 'dashboard.html';
-        }
-    });
-}
-
-// Agregar Fondos
-const addFundsPage = () => {
-    const user = getCurrentUser();
-    if (!user) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    const currentBalance = document.getElementById('currentBalance');
-    if (currentBalance) {
-        currentBalance.textContent = `$ ${user.balance.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-    
-    // Botones de monto rápido
-    const amountButtons = document.querySelectorAll('.amount-btn');
-    amountButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            amountButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('amount').value = btn.dataset.amount;
-        });
-    });
-    
-    // Mostrar/ocultar detalles de tarjeta
-    const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
-    const cardDetails = document.getElementById('cardDetails');
-    
-    paymentMethods.forEach(method => {
-        method.addEventListener('change', () => {
-            const methodCards = document.querySelectorAll('.payment-method-card');
-            methodCards.forEach(card => card.classList.remove('active'));
-            document.querySelector(`[data-method="${method.value}"]`).classList.add('active');
-            
-            if (method.value === 'credito' || method.value === 'debito') {
-                cardDetails.style.display = 'block';
-            } else {
-                cardDetails.style.display = 'none';
-            }
-        });
-    });
-    
-    // Formatear número de tarjeta
-    const cardNumber = document.getElementById('cardNumber');
-    if (cardNumber) {
-        cardNumber.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\s/g, '');
-            let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
-            e.target.value = formatted;
-        });
-    }
-    
-    // Formatear fecha de vencimiento
-    const cardExpiry = document.getElementById('cardExpiry');
-    if (cardExpiry) {
-        cardExpiry.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            e.target.value = value;
-        });
-    }
-    
-    // Enviar formulario
-    const addFundsBtn = document.getElementById('addFundsBtn');
-    if (addFundsBtn) {
-        addFundsBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            const amount = parseFloat(document.getElementById('amount').value);
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            
-            if (!amount || amount <= 0) {
-                alert('Por favor ingresa un monto válido');
-                return;
-            }
-            
-            if ((paymentMethod === 'credito' || paymentMethod === 'debito')) {
-                const cardNumber = document.getElementById('cardNumber').value;
-                const cardName = document.getElementById('cardName').value;
-                const cardExpiry = document.getElementById('cardExpiry').value;
-                const cardCVV = document.getElementById('cardCVV').value;
-                
-                if (!cardNumber || !cardName || !cardExpiry || !cardCVV) {
-                    alert('Por favor completa todos los datos de la tarjeta');
-                    return;
-                }
-            }
-            
-            if (confirm(`¿Confirmas agregar $${amount.toLocaleString('es-AR', { minimumFractionDigits: 2 })} a tu cuenta?`)) {
-                user.balance += amount;
-                
-                const newTransaction = {
-                    id: Date.now(),
-                    type: 'received',
-                    name: 'Depósito',
-                    method: paymentMethod === 'credito' ? 'Tarjeta de Crédito' : 
-                           paymentMethod === 'debito' ? 'Tarjeta de Débito' :
-                           paymentMethod === 'transferencia' ? 'Transferencia Bancaria' : 'Billetera Digital',
-                    date: new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }),
-                    amount: amount,
-                    status: 'Completado'
-                };
-                
-                user.transactions.push(newTransaction);
-                updateUser(user);
-                
-                alert('Fondos agregados exitosamente');
-                window.location.href = 'dashboard.html';
-            }
-        });
-    }
-};
-
-// Configuración
-const settingsPage = () => {
-    const user = getCurrentUser();
-    if (!user) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Formulario de información personal
-    const personalInfoForm = document.getElementById('personalInfoForm');
-    if (personalInfoForm) {
-        personalInfoForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            user.fullName = document.getElementById('fullName').value;
-            user.email = document.getElementById('email').value;
-            user.phone = document.getElementById('phone').value;
-            user.paymentMethod = document.getElementById('paymentMethod').value;
-            
-            updateUser(user);
-            alert('Información actualizada exitosamente');
-        });
-    }
-    
-    // Formulario de seguridad
-    const securityForm = document.getElementById('securityForm');
-    if (securityForm) {
-        securityForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (currentPassword !== user.password) {
-                alert('La contraseña actual es incorrecta');
-                return;
-            }
-            
-            if (newPassword !== confirmPassword) {
-                alert('Las nuevas contraseñas no coinciden');
-                return;
-            }
-            
-            if (newPassword.length < 6) {
-                alert('La nueva contraseña debe tener al menos 6 caracteres');
-                return;
-            }
-            
-            user.password = newPassword;
-            updateUser(user);
-            
-            alert('Contraseña actualizada exitosamente');
-            securityForm.reset();
-        });
-    }
-};
-
-// Soporte - FAQ
-const supportPage = () => {
-    const faqItems = document.querySelectorAll('.faq-item');
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        question.addEventListener('click', () => {
-            const isActive = item.classList.contains('active');
-            faqItems.forEach(i => i.classList.remove('active'));
-            if (!isActive) {
-                item.classList.add('active');
-            }
-        });
-    });
-    
-    // Tabs
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabId = btn.dataset.tab;
-            
-            tabButtons.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            btn.classList.add('active');
-            document.getElementById(`${tabId}-content`).classList.add('active');
-        });
-    });
-    
-    // Chat
-    const chatInput = document.getElementById('chatInput');
-    const sendChatBtn = document.getElementById('sendChatBtn');
-    const chatMessages = document.getElementById('chatMessages');
-    
-    const sendMessage = () => {
-        const message = chatInput.value.trim();
-        if (!message) return;
-        
-        // Agregar mensaje del usuario
-        const userMessage = document.createElement('div');
-        userMessage.className = 'chat-message user';
-        userMessage.innerHTML = `<p>${message}</p>`;
-        chatMessages.appendChild(userMessage);
-        
-        chatInput.value = '';
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-        
-        // Simular respuesta del bot
-        setTimeout(() => {
-            const botMessage = document.createElement('div');
-            botMessage.className = 'chat-message bot';
-            botMessage.innerHTML = '<p>Gracias por tu mensaje. Nuestro equipo de soporte te responderá pronto. Mientras tanto, puedes revisar nuestras preguntas frecuentes.</p>';
-            chatMessages.appendChild(botMessage);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 1000);
-    };
-    
-    if (sendChatBtn) {
-        sendChatBtn.addEventListener('click', sendMessage);
-    }
-    
-    if (chatInput) {
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-    }
-};
-
-// Inicializar páginas según la URL
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPage = window.location.pathname.split('/').pop();
-    
-    if (currentPage === 'dashboard.html' || currentPage === '') {
-        loadDashboard();
-    } else if (currentPage === 'add-funds.html') {
-        addFundsPage();
-    } else if (currentPage === 'settings.html') {
-        settingsPage();
-    } else if (currentPage === 'support.html') {
-        supportPage();
-    }
-});
-
-
